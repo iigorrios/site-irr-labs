@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IIR Labs — Sistemas inteligentes de IA, automação e dados</title>
+<meta name="description" content="A IIR Labs projeta e constrói automações, agentes de IA e infraestrutura de dados que transformam a operação do seu negócio em resultado mensurável.">
+<link rel="canonical" href="https://iir-labs.vercel.app/">
+<link rel="icon" href="assets/logo-app-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IIR Labs — Sistemas inteligentes de IA, automação e dados">
+<meta property="og:description" content="Automações, agentes de IA e engenharia de dados sob medida para o crescimento do seu negócio.">
+<meta property="og:image" content="assets/logo-horizontal-color.png">
+<meta name="twitter:card" content="summary_large_image">
+
+  <title>IIR Labs — Sistemas inteligentes de IA, automação e dados</title>
+  <meta name="description" content="A IIR Labs projeta e constrói automações, agentes de IA e infraestrutura de dados que transformam a operação do seu negócio em resultado mensurável.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="IIR Labs — Sistemas inteligentes de IA, automação e dados">
+  <meta property="og:description" content="Automações, agentes de IA e engenharia de dados sob medida para o crescimento do seu negócio.">
+  <meta property="og:image" content="assets/logo-horizontal-color.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/logo-app-icon.png">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/iir-labs-design-system-2-0-8a63def9-18a3-4fd2-bec7-e03a8f6dd61a/styles.css">
+  <style>
+    html{scroll-behavior:smooth;}
+    body{margin:0;background:#050B12;}
+    ::selection{background:rgba(45,220,235,.25);}
+    a{color:var(--color-text-link);text-decoration:none;}
+    a:hover{color:var(--color-text-link-hover);}
+    *{box-sizing:border-box;}
+    input,textarea{font-family:var(--font-sans);}
+    input::placeholder,textarea::placeholder{color:var(--color-text-tertiary);}
+    section[id]{scroll-margin-top:84px;}
+
+    /* scroll progress */
+    .iir-progress{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:var(--brand-gradient);z-index:60;will-change:transform;}
+
+    /* back to top */
+    .iir-top{position:fixed;right:22px;bottom:22px;z-index:55;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-m);border:1px solid var(--color-border-default);background:rgba(15,36,56,.8);backdrop-filter:blur(8px);color:var(--color-accent-primary);cursor:pointer;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .25s var(--ease-standard),transform .25s var(--ease-standard),border-color .2s var(--ease-standard);}
+    .iir-top:hover{border-color:var(--color-border-strong);box-shadow:var(--shadow-glow-cyan);}
+    .iir-top.show{opacity:1;transform:none;pointer-events:auto;}
+
+    /* nav scroll-spy */
+    .iir-nav-link{position:relative;color:var(--color-text-secondary);transition:color .2s var(--ease-standard);}
+    .iir-nav-link:hover{color:var(--color-text-primary);}
+    .iir-nav-link.active{color:var(--color-text-primary);}
+    .iir-nav-link.active::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:2px;background:var(--brand-gradient);}
+
+    /* spotlight cards */
+    .iir-card{position:relative;overflow:hidden;}
+    .iir-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(45,220,235,.14),transparent 60%);opacity:0;transition:opacity .25s var(--ease-standard);pointer-events:none;}
+    .iir-card:hover::before{opacity:1;}
+
+    /* button polish: press + one-pass shimmer */
+    .iir-btn{position:relative;overflow:hidden;transition:transform .12s var(--ease-standard),filter .12s var(--ease-standard);}
+    .iir-btn:active{transform:scale(.97);opacity:.92;}
+    .iir-btn::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;transform:skewX(-18deg);background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);opacity:0;pointer-events:none;}
+    .iir-btn:hover::after{animation:iir-shimmer .7s var(--ease-standard);}
+    @keyframes iir-shimmer{0%{left:-60%;opacity:.6;}100%{left:120%;opacity:0;}}
+
+    /* hero schematic (pipeline) */
+    .iir-pipe{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;}
+    .iir-node{display:flex;flex-direction:column;align-items:center;gap:8px;flex:0 0 auto;width:58px;}
+    .iir-node .box{width:46px;height:46px;border-radius:12px;border:1px solid var(--color-border-default);background:var(--color-bg-surface-raised);display:flex;align-items:center;justify-content:center;color:var(--color-accent-primary);}
+    .iir-node .lbl{font-size:10px;letter-spacing:.02em;color:var(--color-text-secondary);font-weight:var(--fw-semibold);white-space:nowrap;}
+    .iir-conn{position:relative;flex:1;height:2px;margin-top:22px;min-width:12px;border-radius:2px;background:var(--color-border-default);overflow:visible;}
+    .iir-packet{position:absolute;top:50%;left:0;width:6px;height:6px;border-radius:50%;background:var(--color-accent-primary);box-shadow:0 0 8px var(--color-accent-primary);transform:translate(-50%,-50%);animation:iir-flow 2.2s linear infinite;}
+    @keyframes iir-flow{0%{left:0;opacity:0;}12%{opacity:1;}88%{opacity:1;}100%{left:100%;opacity:0;}}
+
+    /* comparison bars (sem vs com automação) */
+    .iir-cmp{display:flex;flex-direction:column;gap:16px;}
+    .iir-cmp-row .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+    .iir-cmp-row .lab{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:var(--fw-semibold);color:var(--color-text-secondary);}
+    .iir-cmp-row .dot{width:7px;height:7px;border-radius:50%;}
+    .iir-track{height:9px;border-radius:6px;background:var(--color-bg-inset);overflow:hidden;}
+    .iir-track > span{display:block;height:100%;border-radius:6px;width:0;}
+    .iir-fill-slow{background:linear-gradient(90deg,#7A2E38,#F0546A);animation:iir-fill-slow 4.6s var(--ease-standard) infinite;}
+    .iir-fill-fast{background:var(--brand-gradient);box-shadow:0 0 12px rgba(45,220,235,.35);animation:iir-fill-fast 4.6s var(--ease-standard) infinite;}
+    @keyframes iir-fill-slow{0%{width:0;}12%{width:6%;}60%{width:36%;}82%{width:38%;}100%{width:38%;}}
+    @keyframes iir-fill-fast{0%{width:0;}26%{width:88%;}44%{width:95%;}82%{width:96%;}100%{width:96%;}}
+
+    /* terminal */
+    .iir-term-body{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.7;color:var(--color-text-secondary);white-space:pre-wrap;min-height:132px;}
+    .iir-term-body .p{color:var(--color-accent-primary);}
+    .iir-term-body .ok{color:var(--color-success);}
+    .iir-cursor{display:inline-block;color:var(--color-accent-primary);animation:iir-blink 1s step-end infinite;}
+    @keyframes iir-blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+    @media (prefers-reduced-motion:reduce){
+      .iir-packet{animation:none;left:50%;}
+      .iir-fill-slow{animation:none;width:38%;}
+      .iir-fill-fast{animation:none;width:96%;}
+      .iir-float{animation:none;}
+    }
+
+    /* mobile menu */
+    .iir-menu-btn{display:none;background:none;border:1px solid var(--color-border-default);border-radius:var(--radius-m);padding:9px 11px;cursor:pointer;color:var(--color-text-primary);line-height:0;}
+    .iir-mobile-panel{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:6px;padding:14px 28px 20px;background:rgba(5,11,18,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border-subtle);}
+    .iir-mobile-panel.open{display:flex;}
+    .iir-mobile-panel a{padding:10px 0;color:var(--color-text-secondary);font-size:var(--text-body-m);font-weight:var(--fw-medium);}
+
+    /* hero tilt mockup + floating cards */
+    .iir-tilt-wrap{perspective:1200px;}
+    .iir-tilt{position:relative;transform-style:preserve-3d;transition:transform .18s var(--ease-standard);will-change:transform;}
+    .iir-mock{border:1px solid var(--color-border-subtle);background:rgba(15,36,56,.55);backdrop-filter:blur(8px);border-radius:var(--radius-l);overflow:hidden;box-shadow:var(--shadow-l);}
+    .iir-mock-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--color-border-subtle);background:rgba(8,20,32,.6);}
+    .iir-mock-bar .d{width:10px;height:10px;border-radius:50%;}
+    .iir-mock-bar .u{margin-left:8px;flex:1;height:22px;border-radius:6px;background:var(--color-bg-inset);display:flex;align-items:center;padding:0 10px;font-family:ui-monospace,monospace;font-size:11px;color:var(--color-text-tertiary);}
+    .iir-float{position:absolute;border:1px solid var(--color-border-default);background:rgba(8,20,32,.92);backdrop-filter:blur(8px);border-radius:var(--radius-m);padding:12px 14px;box-shadow:var(--shadow-l);}
+    .iir-float .k{font-size:1.4rem;font-weight:var(--fw-extrabold);letter-spacing:var(--ls-tight);color:var(--color-accent-primary);line-height:1;}
+    .iir-float .t{font-size:10px;text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--color-text-tertiary);font-weight:var(--fw-semibold);margin-top:4px;white-space:nowrap;}
+    .iir-float-a{top:-24px;right:-14px;transform:translateZ(55px);animation:iir-bob 5s var(--ease-standard) infinite;}
+    .iir-float-b{bottom:-22px;left:-16px;transform:translateZ(85px);animation:iir-bob 6.5s var(--ease-standard) infinite .6s;}
+    @keyframes iir-bob{0%,100%{translate:0 0;}50%{translate:0 -9px;}}
+
+    /* processo zig-zag */
+    .iir-proc-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);align-items:start;gap:24px;}
+    .iir-proc-step{position:relative;padding-top:28px;border-top:1px solid var(--color-border-default);}
+    .iir-proc-step.down{margin-top:56px;}
+    .iir-proc-step > *{position:relative;z-index:1;}
+    .iir-proc-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;}
+    .iir-zig{fill:none;stroke:url(#iir-zig-grad);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(45,220,235,.45));}
+
+    /* device demo (rotate on scroll) */
+    .iir-device-stage{perspective:1400px;max-width:960px;margin:0 auto;}
+    .iir-device{transform-style:preserve-3d;border:1px solid var(--color-border-subtle);border-radius:var(--radius-l);overflow:hidden;background:var(--color-bg-inset);box-shadow:var(--shadow-l);will-change:transform;}
+    .iir-device-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--color-border-subtle);background:rgba(8,20,32,.7);}
+    .iir-device-bar .d{width:10px;height:10px;border-radius:50%;}
+    .iir-device-screen{position:relative;aspect-ratio:16/10;background:radial-gradient(120% 90% at 50% 0,rgba(18,150,212,.16),transparent 60%),var(--color-bg-inset);}
+    .iir-device-screen video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+    .iir-device-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--color-text-tertiary);text-align:center;padding:20px;font-size:var(--text-body-s);}
+
+    /* founder portrait */
+    .iir-portrait{width:64px;height:64px;border-radius:50%;overflow:hidden;flex:0 0 auto;border:1px solid var(--color-border-default);background:var(--color-bg-surface-raised);display:flex;align-items:center;justify-content:center;color:var(--color-accent-primary);font-weight:var(--fw-extrabold);font-size:1.1rem;position:relative;}
+    .iir-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+
+    /* responsive */
+    @media (max-width:860px){
+      .iir-proc-grid{grid-template-columns:1fr;}
+      .iir-proc-step.down{margin-top:0;}
+      .iir-float{display:none;}
+      .iir-hero-grid{grid-template-columns:1fr !important;gap:40px !important;}
+      .iir-sobre-grid{grid-template-columns:1fr !important;gap:36px !important;}
+      .iir-footer-grid{grid-template-columns:1fr !important;gap:32px !important;}
+      .iir-section{padding-top:64px !important;padding-bottom:64px !important;}
+    }
+    @media (max-width:720px){
+      .iir-nav-desktop{display:none !important;}
+      .iir-cta-desktop{display:none !important;}
+      .iir-menu-btn{display:inline-flex;align-items:center;justify-content:center;}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      .iir-cursor,.iir-btn::after{animation:none !important;}
+    }
+  </style>
+
+</head>
+<body>
+<div id="iir-site" style="position:relative;min-height:100vh;background:var(--color-bg-canvas);color:var(--color-text-primary);font-family:var(--font-sans);overflow-x:hidden;">
+
+  <div class="iir-progress"></div>
+
+  <canvas style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 80% at 50% -10%, rgba(18,150,212,.18), transparent 55%), radial-gradient(90% 60% at 80% 110%, rgba(45,220,235,.10), transparent 60%);"></div>
+
+  <!-- NAV -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(12px);background:rgba(5,11,18,.55);border-bottom:1px solid var(--color-border-subtle);">
+    <div style="max-width:var(--container-max);margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="#topo" style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/logo-horizontal-color-bg-escuro-crop.png" alt="IIR Labs" style="height:34px;width:auto;display:block;">
+      </a>
+      <nav class="iir-nav-desktop" style="display:flex;align-items:center;gap:28px;font-size:var(--text-body-s);font-weight:var(--fw-medium);">
+        <a href="#servicos" class="iir-nav-link">Serviços</a>
+        <a href="#processo" class="iir-nav-link">Processo</a>
+        <a href="#impacto" class="iir-nav-link">Impacto</a>
+        <a href="#sobre" class="iir-nav-link">Sobre</a>
+      </nav>
+      <a href="https://wa.me/5579981714807" target="_blank" class="iir-btn iir-cta-desktop" style="background:var(--brand-gradient);color:var(--color-text-on-accent);font-weight:var(--fw-semibold);font-size:var(--text-body-s);padding:10px 18px;border-radius:var(--radius-m);white-space:nowrap;">Falar no WhatsApp</a>
+      <button class="iir-menu-btn" aria-label="Abrir menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <div class="iir-mobile-panel">
+      <a href="#servicos">Serviços</a>
+      <a href="#processo">Processo</a>
+      <a href="#impacto">Impacto</a>
+      <a href="#sobre">Sobre</a>
+      <a href="https://wa.me/5579981714807" target="_blank" style="color:var(--color-accent-primary);font-weight:var(--fw-semibold);">Falar no WhatsApp →</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="topo" style="position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:120px 28px 80px;">
+    <div style="max-width:var(--container-max);margin:0 auto;width:100%;">
+
+      
+
+      
+        <div class="iir-hero-grid" style="display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;">
+          <div>
+            <div data-reveal style="display:inline-flex;align-items:center;gap:10px;font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:28px;">Intelligence • Innovation • Results</div>
+            <h1 data-reveal data-reveal-delay="80" style="font-size:clamp(2.4rem,5.4vw,4rem);line-height:1.06;letter-spacing:var(--ls-tight);font-weight:var(--fw-extrabold);margin:0 0 24px;">Engenharia de IA, automação e dados. <span style="color:var(--color-accent-primary);">Feita para escalar.</span></h1>
+            <p data-reveal data-reveal-delay="160" style="font-size:clamp(1.05rem,2vw,1.25rem);line-height:var(--lh-body);color:var(--color-text-secondary);max-width:520px;margin:0 0 36px;">A IIR Labs é especializada na construção de sistemas inteligentes para o crescimento do seu negócio.</p>
+            <div data-reveal data-reveal-delay="240" style="display:flex;flex-wrap:wrap;gap:14px;">
+              <a href="https://wa.me/5579981714807" target="_blank" class="iir-btn" style="background:var(--brand-gradient);color:var(--color-text-on-accent);font-weight:var(--fw-semibold);font-size:var(--text-body-m);padding:15px 28px;border-radius:var(--radius-m);box-shadow:var(--shadow-glow-cyan);">Falar no WhatsApp</a>
+              <a href="#servicos" class="iir-btn" style="background:var(--color-bg-surface-raised);border:1px solid var(--color-border-default);color:var(--color-text-primary);font-weight:var(--fw-semibold);font-size:var(--text-body-m);padding:15px 28px;border-radius:var(--radius-m);">Conhecer os serviços</a>
+            </div>
+          </div>
+          <div class="iir-tilt-wrap" data-reveal data-reveal-delay="200">
+           <div class="iir-tilt">
+            <div class="iir-mock">
+            <div class="iir-mock-bar">
+              <span class="d" style="background:#F0546A;"></span>
+              <span class="d" style="background:#F2B94C;"></span>
+              <span class="d" style="background:#2ED9A3;"></span>
+              <span class="u">painel.iirlabs.com</span>
+            </div>
+            <div style="padding:24px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:var(--text-caption);text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--color-text-tertiary);font-weight:var(--fw-semibold);margin-bottom:22px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--color-success);box-shadow:0 0 8px var(--color-success);"></span>Sistema em operação
+            </div>
+            <div class="iir-pipe">
+              <div class="iir-node">
+                <div class="box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/></svg></div>
+                <div class="lbl">Dados</div>
+              </div>
+              <div class="iir-conn"><span class="iir-packet" style="animation-delay:0s;"></span></div>
+              <div class="iir-node">
+                <div class="box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 6h8M7 8l4 8M17 8l-4 8"/></svg></div>
+                <div class="lbl">Automação</div>
+              </div>
+              <div class="iir-conn"><span class="iir-packet" style="animation-delay:.5s;"></span></div>
+              <div class="iir-node">
+                <div class="box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="11" rx="3"/><path d="M9 12h.01M15 12h.01M12 4v3M9 18l-1 2M15 18l1 2"/></svg></div>
+                <div class="lbl">Agente IA</div>
+              </div>
+              <div class="iir-conn"><span class="iir-packet" style="animation-delay:1s;"></span></div>
+              <div class="iir-node">
+                <div class="box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 20v-6M12 20V8M17 20v-9M7 14l5-6 5 3"/></svg></div>
+                <div class="lbl">Dashboard</div>
+              </div>
+            </div>
+            <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--color-border-subtle);">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--color-text-tertiary);font-weight:var(--fw-semibold);margin-bottom:16px;">Velocidade da operação</div>
+              <div class="iir-cmp">
+                <div class="iir-cmp-row">
+                  <div class="top"><span class="lab"><span class="dot" style="background:#F0546A;"></span>Sem automação</span></div>
+                  <div class="iir-track"><span class="iir-fill-slow"></span></div>
+                </div>
+                <div class="iir-cmp-row">
+                  <div class="top"><span class="lab"><span class="dot" style="background:var(--color-accent-primary);"></span>Com automação</span></div>
+                  <div class="iir-track"><span class="iir-fill-fast"></span></div>
+                </div>
+              </div>
+              <div style="color:var(--color-text-tertiary);font-size:11px;margin-top:14px;line-height:var(--lh-body);">A mesma operação avança muito mais rápido com sistemas inteligentes.</div>
+            </div>
+            </div>
+            </div>
+            <div class="iir-float iir-float-a"><div class="k">24/7</div><div class="t">Operação ativa</div></div>
+            <div class="iir-float iir-float-b"><div class="k">−70%</div><div class="t">Trabalho manual</div></div>
+           </div>
+          </div>
+        </div>
+      
+
+      <div data-reveal data-reveal-delay="360" style="margin-top:72px;display:flex;flex-wrap:wrap;gap:10px 40px;align-items:center;color:var(--color-text-tertiary);font-size:var(--text-caption);letter-spacing:var(--ls-wide);text-transform:uppercase;font-weight:var(--fw-semibold);">
+        <span>Automação</span><span style="color:var(--color-accent-primary);">•</span>
+        <span>Agentes de IA</span><span style="color:var(--color-accent-primary);">•</span>
+        <span>Engenharia de dados</span><span style="color:var(--color-accent-primary);">•</span>
+        <span>Dashboards</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section id="servicos" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div style="max-width:var(--container-max);margin:0 auto;">
+      <div style="max-width:680px;margin-bottom:56px;">
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">O que fazemos</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0 0 16px;">Quatro camadas de um mesmo sistema</h2>
+        <p data-reveal data-reveal-delay="140" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0;">Da coleta do dado à ação automática: cada serviço se conecta ao próximo para tirar trabalho manual da sua operação.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+
+        <div data-reveal style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:30px;transition:border-color .2s var(--ease-standard),box-shadow .3s var(--ease-standard);" class="iir-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--iir-cyan-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px;"><circle cx="9" cy="9" r="4"/><circle cx="31" cy="9" r="4"/><circle cx="20" cy="31" r="4"/><path d="M13 9h14M11 12l7 16M29 12l-7 16"/></svg>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Automação de processos</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Fluxos de automação que conectam seus sistemas e eliminam o trabalho manual repetitivo, com regras claras e rastreáveis.</p>
+        </div>
+
+        <div data-reveal data-reveal-delay="80" style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:30px;transition:border-color .2s var(--ease-standard),box-shadow .3s var(--ease-standard);" class="iir-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--iir-cyan-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px;"><rect x="8" y="10" width="24" height="18" rx="4"/><path d="M14 34l4-6M20 16v6M16 19h8"/><circle cx="20" cy="7" r="2"/><path d="M20 9v1"/></svg>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Agentes de IA</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Atendimento e qualificação no WhatsApp e no CRM, operando 24/7 a partir da sua base de conhecimento.</p>
+        </div>
+
+        <div data-reveal data-reveal-delay="160" style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:30px;transition:border-color .2s var(--ease-standard),box-shadow .3s var(--ease-standard);" class="iir-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--iir-cyan-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px;"><ellipse cx="20" cy="10" rx="12" ry="4"/><path d="M8 10v10c0 2.2 5.4 4 12 4s12-1.8 12-4V10M8 20v10c0 2.2 5.4 4 12 4s12-1.8 12-4V20"/></svg>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Engenharia de dados</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Pipelines que centralizam suas fontes e deixam a informação limpa e pronta para decisão.</p>
+        </div>
+
+        <div data-reveal data-reveal-delay="240" style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:30px;transition:border-color .2s var(--ease-standard),box-shadow .3s var(--ease-standard);" class="iir-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--iir-cyan-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px;"><path d="M7 33h26M11 33V22M19 33V14M27 33V19M11 22l8-8 4 4 6-8"/></svg>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Dashboards & BI</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Painéis com os KPIs que realmente importam, atualizados em tempo real.</p>
+        </div>
+      </div>
+      <div data-reveal style="margin-top:44px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;">
+        <span style="color:var(--color-text-secondary);font-size:var(--text-body-m);">Quer ver isso rodando na sua operação?</span>
+        <a href="https://wa.me/5579981714807" target="_blank" class="iir-btn" style="background:var(--brand-gradient);color:var(--color-text-on-accent);font-weight:var(--fw-semibold);font-size:var(--text-body-m);padding:13px 24px;border-radius:var(--radius-m);box-shadow:var(--shadow-glow-cyan);">Falar no WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL -->
+  <section class="iir-section" style="position:relative;z-index:1;padding:40px 28px 80px;">
+    <div style="max-width:820px;margin:0 auto;">
+      <div data-reveal class="iir-terminal" style="border:1px solid var(--color-border-default);background:linear-gradient(180deg,rgba(8,20,32,.92),rgba(5,11,18,.92));border-radius:var(--radius-l);overflow:hidden;box-shadow:var(--shadow-l);">
+        <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--color-border-subtle);background:rgba(15,36,56,.4);">
+          <span style="width:11px;height:11px;border-radius:50%;background:#F0546A;"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#F2B94C;"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#2ED9A3;"></span>
+          <span style="margin-left:10px;font-family:ui-monospace,monospace;font-size:12px;color:var(--color-text-tertiary);">iir-labs — deploy</span>
+        </div>
+        <div class="iir-term-body" style="padding:20px 22px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESSO -->
+  <section id="processo" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div style="max-width:var(--container-max);margin:0 auto;">
+      <div style="max-width:680px;margin-bottom:56px;">
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">Como funciona</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0;">Do diagnóstico à escala, em quatro etapas</h2>
+      </div>
+      <div class="iir-proc-grid">
+        <svg class="iir-proc-svg"><defs><linearGradient id="iir-zig-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--iir-blue-600)"/><stop offset="1" stop-color="var(--iir-cyan-500)"/></linearGradient></defs><path class="iir-zig" d="M0,0"/></svg>
+        <div data-reveal class="iir-proc-step">
+          <div style="font-size:var(--text-caption);font-weight:var(--fw-bold);color:var(--color-accent-primary);letter-spacing:var(--ls-wide);margin-bottom:14px;">01</div>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Diagnóstico</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Mapeamos a operação, os sistemas atuais e onde está o atrito.</p>
+        </div>
+        <div data-reveal data-reveal-delay="80" class="iir-proc-step down">
+          <div style="font-size:var(--text-caption);font-weight:var(--fw-bold);color:var(--color-accent-primary);letter-spacing:var(--ls-wide);margin-bottom:14px;">02</div>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Arquitetura</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Desenhamos o sistema: automações, agentes e camada de dados.</p>
+        </div>
+        <div data-reveal data-reveal-delay="160" class="iir-proc-step">
+          <div style="font-size:var(--text-caption);font-weight:var(--fw-bold);color:var(--color-accent-primary);letter-spacing:var(--ls-wide);margin-bottom:14px;">03</div>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Construção</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Implementamos e integramos com as ferramentas que você já usa.</p>
+        </div>
+        <div data-reveal data-reveal-delay="240" class="iir-proc-step down">
+          <div style="font-size:var(--text-caption);font-weight:var(--fw-bold);color:var(--color-accent-primary);letter-spacing:var(--ls-wide);margin-bottom:14px;">04</div>
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 10px;">Escala & medição</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Acompanhamos os números e otimizamos o sistema continuamente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EM AÇÃO / DEVICE -->
+  <section id="demo" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div style="max-width:var(--container-max);margin:0 auto;">
+      <div style="max-width:680px;margin-bottom:48px;">
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">Em ação</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0 0 16px;">Seu sistema, funcionando de verdade</h2>
+        <p data-reveal data-reveal-delay="140" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0;">Uma prévia de como a operação aparece no dia a dia: dados, automações e painéis em um só lugar.</p>
+      </div>
+      <div class="iir-device-stage" data-reveal data-reveal-delay="120">
+        <div class="iir-device">
+          <div class="iir-device-bar">
+            <span class="d" style="background:#F0546A;"></span>
+            <span class="d" style="background:#F2B94C;"></span>
+            <span class="d" style="background:#2ED9A3;"></span>
+            <span style="margin-left:8px;font-family:ui-monospace,monospace;font-size:11px;color:var(--color-text-tertiary);">painel.iirlabs.com</span>
+          </div>
+          <div class="iir-device-screen">
+            <div class="iir-device-ph">Prévia do sistema<br><span style="font-size:11px;">adicione seu vídeo em assets/demo.mp4</span></div>
+            <video autoplay muted loop playsinline preload="none" poster="assets/demo-poster.jpg">
+              <source src="assets/demo.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACTO -->
+  <section id="impacto" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div style="max-width:var(--container-max);margin:0 auto;">
+      <div style="max-width:680px;margin-bottom:56px;">
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">O impacto que buscamos</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0 0 16px;">Menos operação manual, mais decisão</h2>
+        <p data-reveal data-reveal-delay="140" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0;">O que um sistema bem construído destrava na prática. As faixas abaixo são as metas que perseguimos em cada projeto — o ponto de partida é sempre a sua operação.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+        <div data-reveal data-count-to="70" data-count-suffix="%" style="border:1px solid var(--color-border-subtle);background:rgba(15,36,56,.5);backdrop-filter:blur(6px);border-radius:var(--radius-l);padding:34px 30px;">
+          <div style="display:flex;align-items:baseline;gap:7px;"><span style="font-size:1.2rem;font-weight:var(--fw-bold);color:var(--color-text-tertiary);">até</span><div class="count" style="font-size:clamp(2.8rem,5vw,3.6rem);font-weight:var(--fw-extrabold);letter-spacing:var(--ls-tight);background:var(--brand-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">0%</div></div>
+          <div style="color:var(--color-text-secondary);font-size:var(--text-body-m);margin-top:14px;line-height:var(--lh-body);">a menos de trabalho manual em rotinas automatizadas.</div>
+        </div>
+        <div data-reveal data-reveal-delay="100" data-count-to="24" data-count-suffix="/7" style="border:1px solid var(--color-border-subtle);background:rgba(15,36,56,.5);backdrop-filter:blur(6px);border-radius:var(--radius-l);padding:34px 30px;">
+          <div class="count" style="font-size:clamp(2.8rem,5vw,3.6rem);font-weight:var(--fw-extrabold);letter-spacing:var(--ls-tight);background:var(--brand-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">0/7</div>
+          <div style="color:var(--color-text-secondary);font-size:var(--text-body-m);margin-top:14px;line-height:var(--lh-body);">de atendimento e monitoramento, sem aumentar o time.</div>
+        </div>
+        <div data-reveal data-reveal-delay="200" data-count-to="3" data-count-suffix="x" style="border:1px solid var(--color-border-subtle);background:rgba(15,36,56,.5);backdrop-filter:blur(6px);border-radius:var(--radius-l);padding:34px 30px;">
+          <div style="display:flex;align-items:baseline;gap:7px;"><span style="font-size:1.2rem;font-weight:var(--fw-bold);color:var(--color-text-tertiary);">até</span><div class="count" style="font-size:clamp(2.8rem,5vw,3.6rem);font-weight:var(--fw-extrabold);letter-spacing:var(--ls-tight);background:var(--brand-gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">0x</div></div>
+          <div style="color:var(--color-text-secondary);font-size:var(--text-body-m);margin-top:14px;line-height:var(--lh-body);">mais velocidade na decisão com dados centralizados.</div>
+        </div>
+      </div>
+      <div data-reveal style="margin-top:22px;color:var(--color-text-tertiary);font-size:var(--text-caption);">Faixas de referência, não garantia de resultado: o número real depende da sua operação.</div>
+      <div data-reveal style="margin-top:44px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;">
+        <span style="color:var(--color-text-secondary);font-size:var(--text-body-m);">Vamos medir esse impacto no seu negócio.</span>
+        <a href="https://wa.me/5579981714807" target="_blank" class="iir-btn" style="background:var(--brand-gradient);color:var(--color-text-on-accent);font-weight:var(--fw-semibold);font-size:var(--text-body-m);padding:13px 24px;border-radius:var(--radius-m);box-shadow:var(--shadow-glow-cyan);">Começar um diagnóstico</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div class="iir-sobre-grid" style="max-width:var(--container-max);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+      <div>
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">Sobre a IIR Labs</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0 0 24px;">Engenharia e negócio no mesmo sistema</h2>
+        <p data-reveal data-reveal-delay="140" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0 0 18px;">A IIR Labs une engenharia de software e visão de negócio no mesmo sistema. Cada projeto parte de um problema real da sua operação e termina em algo que roda sozinho — integrado às ferramentas que você já usa e medido por números, não por achismo.</p>
+        <p data-reveal data-reveal-delay="200" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0;">O conhecimento acumulado em cada projeto também alimenta o desenvolvimento de produtos próprios — sistemas que nascem já validados pela operação real, não por suposição.</p>
+        <div data-reveal data-reveal-delay="260" style="display:flex;align-items:center;gap:16px;margin-top:34px;">
+          <div class="iir-portrait"><span>IR</span><img src="assets/foto-fundador.jpg" alt="Igor Rios"></div>
+          <div>
+            <div style="font-weight:var(--fw-bold);color:var(--color-text-primary);">Igor Rios</div>
+            <div style="color:var(--color-text-tertiary);font-size:var(--text-body-s);">Fundador · IIR Labs</div>
+          </div>
+        </div>
+      </div>
+      <div data-reveal data-reveal-delay="160" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:26px 28px;">
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 8px;color:var(--color-accent-primary);">Simplicidade</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Simples escala; sofisticado falha. Preferimos o sistema que aguenta o dia a dia.</p>
+        </div>
+        <div style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:26px 28px;">
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 8px;color:var(--color-accent-primary);">Mensurabilidade</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">O que não é medido não é gerenciado. Todo sistema entrega números.</p>
+        </div>
+        <div style="border:1px solid var(--color-border-subtle);background:var(--color-bg-surface-raised);border-radius:var(--radius-l);padding:26px 28px;">
+          <h3 style="font-size:var(--text-heading-s);font-weight:var(--fw-bold);margin:0 0 8px;color:var(--color-accent-primary);">Escala</h3>
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);margin:0;">Construímos para crescer sem reescrever tudo a cada novo cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato" class="iir-section" style="position:relative;z-index:1;padding:100px 28px;">
+    <div style="max-width:920px;margin:0 auto;border:1px solid var(--color-border-default);background:linear-gradient(180deg, rgba(15,36,56,.7), rgba(8,20,32,.7));backdrop-filter:blur(10px);border-radius:var(--radius-xl);padding:clamp(32px,5vw,64px);">
+      <div style="text-align:center;max-width:600px;margin:0 auto 40px;">
+        <div data-reveal style="font-size:var(--text-overline);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);margin-bottom:16px;">Vamos conversar</div>
+        <h2 data-reveal data-reveal-delay="80" style="font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.1;letter-spacing:var(--ls-tight);font-weight:var(--fw-bold);margin:0 0 14px;">Conte o desafio da sua operação</h2>
+        <p data-reveal data-reveal-delay="140" style="font-size:var(--text-body-l);color:var(--color-text-secondary);line-height:var(--lh-body);margin:0;">Preencha e envie direto pelo WhatsApp. Retornamos com um diagnóstico inicial.</p>
+      </div>
+      <div data-reveal data-reveal-delay="180" style="display:flex;flex-direction:column;gap:16px;max-width:560px;margin:0 auto;">
+        <input id="lead-nome" type="text" placeholder="Seu nome" style="width:100%;background:var(--color-bg-inset);border:1px solid var(--color-border-default);border-radius:var(--radius-m);padding:15px 18px;color:var(--color-text-primary);font-size:var(--text-body-m);outline:none;">
+        <textarea id="lead-msg" rows="4" placeholder="Sobre a sua operação e o que você quer resolver" style="width:100%;background:var(--color-bg-inset);border:1px solid var(--color-border-default);border-radius:var(--radius-m);padding:15px 18px;color:var(--color-text-primary);font-size:var(--text-body-m);outline:none;resize:vertical;"></textarea>
+        <button class="iir-btn" style="background:var(--brand-gradient);color:var(--color-text-on-accent);font-weight:var(--fw-semibold);font-size:var(--text-body-m);padding:16px 28px;border:none;border-radius:var(--radius-m);cursor:pointer;box-shadow:var(--shadow-glow-cyan);">Enviar pelo WhatsApp</button>
+        <div style="text-align:center;color:var(--color-text-tertiary);font-size:var(--text-body-s);">ou fale direto: <a href="https://wa.me/5579981714807" target="_blank">+55 79 98171-4807</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="position:relative;z-index:1;border-top:1px solid var(--color-border-subtle);background:rgba(5,11,18,.6);padding:64px 28px 40px;">
+    <div style="max-width:var(--container-max);margin:0 auto;">
+      <div class="iir-footer-grid" style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:48px;border-bottom:1px solid var(--color-border-subtle);">
+        <div>
+          <img src="assets/logo-horizontal-white.png" alt="IIR Labs" style="height:30px;width:auto;margin-bottom:18px;">
+          <p style="color:var(--color-text-secondary);font-size:var(--text-body-m);line-height:var(--lh-body);max-width:320px;margin:0 0 18px;">Sistemas inteligentes para o crescimento do seu negócio.</p>
+          <div style="font-size:var(--text-caption);letter-spacing:var(--ls-wide);text-transform:uppercase;color:var(--color-accent-primary);font-weight:var(--fw-semibold);">IA • Automação • Dados</div>
+        </div>
+        <div>
+          <div style="font-size:var(--text-caption);text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--color-text-tertiary);font-weight:var(--fw-semibold);margin-bottom:16px;">Navegação</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:var(--text-body-m);">
+            <a href="#servicos" style="color:var(--color-text-secondary);">Serviços</a>
+            <a href="#processo" style="color:var(--color-text-secondary);">Processo</a>
+            <a href="#impacto" style="color:var(--color-text-secondary);">Impacto</a>
+            <a href="#sobre" style="color:var(--color-text-secondary);">Sobre</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:var(--text-caption);text-transform:uppercase;letter-spacing:var(--ls-wide);color:var(--color-text-tertiary);font-weight:var(--fw-semibold);margin-bottom:16px;">Contato</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:var(--text-body-m);">
+            <a href="https://wa.me/5579981714807" target="_blank" style="color:var(--color-text-secondary);">WhatsApp</a>
+            <a href="mailto:contato@iigorrios.com.br" style="color:var(--color-text-secondary);">contato@iigorrios.com.br</a>
+            <a href="https://www.instagram.com/iigorrios/" target="_blank" style="color:var(--color-text-secondary);">Instagram</a>
+            <a href="https://www.youtube.com/@iigorrios" target="_blank" style="color:var(--color-text-secondary);">YouTube</a>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;color:var(--color-text-tertiary);font-size:var(--text-caption);">
+        <span>© 2026 IIR Labs Tecnologia Ltda. Todos os direitos reservados.</span>
+        <span>Intelligence • Innovation • Results</span>
+      </div>
+    </div>
+  </footer>
+
+  <button class="iir-top" aria-label="Voltar ao topo">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+  </button>
+</div>
+
+<script>
+
+class DCLogic {}
+class Component extends DCLogic {
+  renderVals() {
+    const v = (this.props.heroVariant ?? 'A');
+    return {
+      onCanvas: (el) => { this._canvas = el; },
+      onProgress: (el) => { this._progress = el; },
+      onTerminal: (el) => { this._terminal = el; },
+      onBackTop: (el) => { this._backTop = el; },
+      backToTop: () => { window.scrollTo({ top: 0, behavior: this._reduce ? 'auto' : 'smooth' }); },
+      onTilt: (el) => { this._tilt = el; },
+      onDevice: (el) => { this._device = el; },
+      onPortrait: (el) => { el.addEventListener('error', () => { el.style.display = 'none'; }); },
+      heroA: v === 'A',
+      heroB: v === 'B',
+      cardEnter: (e) => { const s=e.currentTarget.style; s.borderColor='var(--color-border-strong)'; s.boxShadow='var(--shadow-glow-cyan)'; },
+      cardLeave: (e) => { const s=e.currentTarget.style; s.borderColor='var(--color-border-subtle)'; s.boxShadow='none'; },
+      cardMove: (e) => { const el=e.currentTarget, r=el.getBoundingClientRect(); el.style.setProperty('--mx', (e.clientX-r.left)+'px'); el.style.setProperty('--my', (e.clientY-r.top)+'px'); },
+      inFocus: (e) => { const s=e.currentTarget.style; s.borderColor='var(--color-accent-primary)'; s.boxShadow='0 0 0 3px var(--color-focus-ring)'; },
+      inBlur: (e) => { const s=e.currentTarget.style; s.borderColor='var(--color-border-default)'; s.boxShadow='none'; },
+      toggleMenu: () => { const p=document.getElementById('iir-site')?.querySelector('.iir-mobile-panel'); if(p) p.classList.toggle('open'); },
+      closeMenu: () => { const p=document.getElementById('iir-site')?.querySelector('.iir-mobile-panel'); if(p) p.classList.remove('open'); },
+      submitLead: () => {
+        const root = document.getElementById('iir-site');
+        const nome = (root?.querySelector('#lead-nome')?.value || '').trim();
+        const msg = (root?.querySelector('#lead-msg')?.value || '').trim();
+        const parts = [];
+        parts.push(nome ? `Olá, sou ${nome}.` : 'Olá!');
+        parts.push(msg || 'Gostaria de conhecer os sistemas da IIR Labs.');
+        const text = encodeURIComponent(parts.join(' '));
+        window.open('https://wa.me/5579981714807?text=' + text, '_blank');
+      }
+    };
+  }
+
+  componentDidMount() {
+    this._reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this._cleanup = [];
+    this._setupReveal();
+    this._setupTerminal();
+    this._setupTilt();
+    this._setupZigzag();
+    this._setupDeviceRotate();
+    this._setupScrollUI();
+    if ((this.props.animatedBackground ?? true) && !this._reduce) this._setupCanvas();
+  }
+
+  _setupReveal() {
+    const root = document.getElementById('iir-site');
+    if (!root) return;
+    const els = [...root.querySelectorAll('[data-reveal]')];
+    if (this._reduce) {
+      els.forEach(el => {
+        el.style.opacity = '1'; el.style.transform = 'none';
+        if (el.hasAttribute('data-count-to')) {
+          const node = el.querySelector('.count');
+          if (node) node.textContent = (parseFloat(el.getAttribute('data-count-to')) || 0) + (el.getAttribute('data-count-suffix') || '');
+        }
+      });
+      return;
+    }
+    els.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity .7s var(--ease-standard), transform .7s var(--ease-standard)';
+      const d = el.getAttribute('data-reveal-delay');
+      if (d) el.style.transitionDelay = d + 'ms';
+    });
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          if (e.target.hasAttribute('data-count-to')) this._animateCount(e.target);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.18 });
+    els.forEach(el => io.observe(el));
+    this._cleanup.push(() => io.disconnect());
+  }
+
+  _setupTerminal() {
+    const host = this._terminal;
+    if (!host) return;
+    const lines = [
+      { t: '$ iir deploy agent --prod', c: 'p' },
+      { t: 'conectando WhatsApp Business API... ok', c: 'ok' },
+      { t: 'carregando base de conhecimento... 1.2k docs', c: '' },
+      { t: 'pipeline de automação ativo · 14 fluxos', c: '' },
+      { t: 'dashboards atualizados em tempo real', c: '' },
+      { t: 'agente online 24/7 ✓', c: 'ok' }
+    ];
+    const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const CURSOR = '<span class="iir-cursor">▍</span>';
+
+    if (this._reduce) {
+      host.innerHTML = lines.map(L => `<div class="${L.c}">${esc(L.t)}</div>`).join('') + '<div>' + CURSOR + '</div>';
+      return;
+    }
+
+    let started = false;
+    const run = () => {
+      let li = 0, ci = 0;
+      const draw = () => {
+        let html = '';
+        for (let i = 0; i < li; i++) html += `<div class="${lines[i].c}">${esc(lines[i].t)}</div>`;
+        if (li < lines.length) html += `<div class="${lines[li].c}">${esc(lines[li].t.slice(0, ci))}${CURSOR}</div>`;
+        else html += '<div>' + CURSOR + '</div>';
+        host.innerHTML = html;
+      };
+      const tick = () => {
+        if (this._destroyed) return;
+        if (li >= lines.length) { draw(); this._termT = setTimeout(run, 4500); return; }
+        const L = lines[li];
+        if (ci <= L.t.length) { draw(); ci++; this._termT = setTimeout(tick, 26); }
+        else { li++; ci = 0; this._termT = setTimeout(tick, 380); }
+      };
+      tick();
+    };
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach(e => { if (e.isIntersecting && !started) { started = true; run(); io.unobserve(e.target); } });
+    }, { threshold: 0.4 });
+    io.observe(host);
+    this._cleanup.push(() => { io.disconnect(); if (this._termT) clearTimeout(this._termT); });
+  }
+
+  _setupTilt() {
+    const el = this._tilt;
+    if (!el || this._reduce) return;
+    if (window.matchMedia('(max-width: 860px)').matches) return;
+    const wrap = el.parentElement;
+    const hero = document.getElementById('topo') || wrap;
+    const onMove = (e) => {
+      const r = wrap.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      const ry = Math.max(-1, Math.min(1, dx)) * 10;
+      const rx = Math.max(-1, Math.min(1, dy)) * -8;
+      el.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+    };
+    const onLeave = () => { el.style.transform = 'rotateX(0deg) rotateY(0deg)'; };
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+    this._cleanup.push(() => { hero.removeEventListener('mousemove', onMove); hero.removeEventListener('mouseleave', onLeave); });
+  }
+
+  _setupZigzag() {
+    const root = document.getElementById('iir-site');
+    const grid = root && root.querySelector('.iir-proc-grid');
+    const svg = grid && grid.querySelector('.iir-proc-svg');
+    const path = svg && svg.querySelector('.iir-zig');
+    if (!path) return;
+    const steps = [...grid.querySelectorAll('.iir-proc-step')];
+    let len = 0;
+    const build = () => {
+      const w = grid.clientWidth, h = grid.clientHeight;
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      const pts = steps.map(s => ({ x: s.offsetLeft + s.offsetWidth / 2, y: s.offsetTop + 1 }));
+      if (pts.length < 2) return;
+      let d = 'M' + pts[0].x + ',' + pts[0].y;
+      for (let i = 1; i < pts.length; i++) {
+        const mx = (pts[i - 1].x + pts[i].x) / 2;
+        d += ' C' + mx + ',' + pts[i - 1].y + ' ' + mx + ',' + pts[i].y + ' ' + pts[i].x + ',' + pts[i].y;
+      }
+      path.setAttribute('d', d);
+      len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = this._reduce ? 0 : len;
+      if (!this._reduce && this._zigUpdate) this._zigUpdate();
+    };
+    requestAnimationFrame(() => requestAnimationFrame(build));
+    const onResize = () => build();
+    window.addEventListener('resize', onResize);
+    this._cleanup.push(() => window.removeEventListener('resize', onResize));
+    if (this._reduce) return;
+    const section = document.getElementById('processo');
+    this._zigUpdate = () => {
+      if (!len || !section) return;
+      const r = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+      let p = (vh - r.top) / (vh * 0.55 + r.height * 0.5);
+      p = Math.max(0, Math.min(1, p));
+      path.style.strokeDashoffset = len * (1 - p);
+    };
+  }
+
+  _setupDeviceRotate() {
+    const el = this._device;
+    if (!el) return;
+    if (this._reduce) { el.style.transform = 'rotateX(0deg)'; return; }
+    const stage = el.parentElement;
+    this._deviceUpdate = () => {
+      const r = stage.getBoundingClientRect();
+      const vh = window.innerHeight;
+      let p = (vh - r.top) / (vh + r.height);
+      p = Math.max(0, Math.min(1, p));
+      const rx = (1 - p) * 14;
+      el.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg)';
+    };
+    this._deviceUpdate();
+  }
+
+  _setupScrollUI() {
+    const root = document.getElementById('iir-site');
+    if (!root) return;
+    // progress bar
+    const bar = this._progress;
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const frac = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (bar) bar.style.transform = 'scaleX(' + frac + ')';
+      if (this._backTop) this._backTop.classList.toggle('show', window.scrollY > 600);
+      if (this._zigUpdate) this._zigUpdate();
+      if (this._deviceUpdate) this._deviceUpdate();
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    this._cleanup.push(() => window.removeEventListener('scroll', onScroll));
+
+    // scroll spy
+    const links = [...root.querySelectorAll('.iir-nav-link')];
+    const sections = links.map(a => root.querySelector(a.getAttribute('href'))).filter(Boolean);
+    if (sections.length) {
+      const spy = new IntersectionObserver((ents) => {
+        ents.forEach(e => {
+          if (e.isIntersecting) {
+            const id = '#' + e.target.id;
+            links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      sections.forEach(s => spy.observe(s));
+      this._cleanup.push(() => spy.disconnect());
+    }
+  }
+
+  _animateCount(el) {
+    const target = parseFloat(el.getAttribute('data-count-to')) || 0;
+    const suffix = el.getAttribute('data-count-suffix') || '';
+    const node = el.querySelector('.count');
+    if (!node) return;
+    const dur = 1500, start = performance.now();
+    const step = (t) => {
+      let k = Math.min(1, (t - start) / dur);
+      k = 1 - Math.pow(1 - k, 3);
+      node.textContent = Math.round(target * k) + suffix;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  _setupCanvas() {
+    const canvas = this._canvas;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, dpr = 1, nodes = [];
+    const intensity = this.props.bgIntensity ?? 1;
+
+    const build = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(28, Math.min(130, Math.round((W * H) / 15000 * intensity)));
+      nodes = [];
+      for (let i = 0; i < count; i++) {
+        nodes.push({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.16, vy: (Math.random() - 0.5) * 0.16,
+          r: Math.random() * 1.6 + 0.8
+        });
+      }
+    };
+    build();
+    this._onResize = build;
+    window.addEventListener('resize', build);
+
+    let sp = 0;
+    const loop = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const target = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      sp += (target - sp) * 0.08;
+
+      ctx.clearRect(0, 0, W, H);
+      const pan = sp * H * 0.5;
+      const D = 150;
+
+      for (const n of nodes) {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < -20) n.x = W + 20; if (n.x > W + 20) n.x = -20;
+        if (n.y < -20) n.y = H + 20; if (n.y > H + 20) n.y = -20;
+      }
+
+      // connections — density/brightness grows with scroll
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        const ay = ((a.y - pan) % H + H) % H;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const by = ((b.y - pan) % H + H) % H;
+          const dx = a.x - b.x, dy = ay - by;
+          const dist = Math.hypot(dx, dy);
+          if (dist < D) {
+            const alpha = (1 - dist / D) * (0.10 + sp * 0.28);
+            const mix = 0.35 + sp * 0.6;
+            ctx.strokeStyle = `rgba(${Math.round(18 + 27 * mix)},${Math.round(150 + 70 * mix)},${Math.round(212 + 23 * mix)},${alpha})`;
+            ctx.lineWidth = 0.7;
+            ctx.beginPath(); ctx.moveTo(a.x, ay); ctx.lineTo(b.x, by); ctx.stroke();
+          }
+        }
+      }
+      // nodes
+      for (const n of nodes) {
+        const ny = ((n.y - pan) % H + H) % H;
+        ctx.beginPath(); ctx.arc(n.x, ny, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(45,220,235,${0.28 + sp * 0.4})`;
+        ctx.fill();
+      }
+
+      // rising trendline that draws in with scroll
+      const prog = sp;
+      const baseY = H * 0.82;
+      ctx.beginPath();
+      const seg = 60;
+      for (let k = 0; k <= seg; k++) {
+        const fx = k / seg;
+        const x = fx * W;
+        const rise = Math.pow(fx, 1.4) * H * 0.42 * prog;
+        const wobble = Math.sin(fx * 7 + prog * 3) * 10 * (1 - fx * 0.4);
+        const y = baseY - rise + wobble;
+        if (fx <= prog + 0.02) {
+          if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+      }
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, 'rgba(18,150,212,0)');
+      grad.addColorStop(0.4, 'rgba(18,150,212,0.55)');
+      grad.addColorStop(1, 'rgba(45,220,235,0.9)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(45,220,235,0.5)';
+      ctx.shadowBlur = 16;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      this._raf = requestAnimationFrame(loop);
+    };
+    loop();
+    this._onVis = () => {
+      if (document.hidden) { if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; } }
+      else if (!this._raf) loop();
+    };
+    document.addEventListener('visibilitychange', this._onVis);
+  }
+
+  componentWillUnmount() {
+    this._destroyed = true;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+    if (this._onVis) document.removeEventListener('visibilitychange', this._onVis);
+    if (this._termT) clearTimeout(this._termT);
+    (this._cleanup || []).forEach(fn => { try { fn(); } catch (_) {} });
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var c = new Component();
+  c.props = { heroVariant:'B', animatedBackground:true, bgIntensity:1 };
+  var h = c.renderVals();
+  var $ = function(s){ return document.querySelector(s); };
+  var qa = function(s){ return [].slice.call(document.querySelectorAll(s)); };
+  if (h.onCanvas)   h.onCanvas($('#iir-site canvas'));
+  if (h.onProgress) h.onProgress($('.iir-progress'));
+  if (h.onTerminal) h.onTerminal($('.iir-term-body'));
+  if (h.onBackTop)  h.onBackTop($('.iir-top'));
+  if (h.onTilt)     h.onTilt($('.iir-tilt'));
+  if (h.onDevice)   h.onDevice($('.iir-device'));
+  if (h.onPortrait) h.onPortrait($('.iir-portrait img'));
+  qa('.iir-card').forEach(function(el){
+    if(h.cardEnter) el.addEventListener('mouseenter', h.cardEnter);
+    if(h.cardLeave) el.addEventListener('mouseleave', h.cardLeave);
+    if(h.cardMove)  el.addEventListener('mousemove', h.cardMove);
+  });
+  qa('#iir-site input, #iir-site textarea').forEach(function(el){
+    if(h.inFocus) el.addEventListener('focus', h.inFocus);
+    if(h.inBlur)  el.addEventListener('blur', h.inBlur);
+  });
+  var lead = qa('#iir-site button').filter(function(b){return /WhatsApp/.test(b.textContent);})[0];
+  if(lead && h.submitLead) lead.addEventListener('click', h.submitLead);
+  var mb = $('.iir-menu-btn'); if(mb && h.toggleMenu) mb.addEventListener('click', h.toggleMenu);
+  qa('.iir-mobile-panel a').forEach(function(a){ if(h.closeMenu) a.addEventListener('click', h.closeMenu); });
+  var bt = $('.iir-top'); if(bt && h.backToTop) bt.addEventListener('click', h.backToTop);
+  c.componentDidMount();
+});
+
+</script>
+</body>
+</html>
